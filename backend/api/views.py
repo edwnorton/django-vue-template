@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
 from rest_framework import viewsets
+from django.http import JsonResponse
 
 from .models import Message, MessageSerializer
 
@@ -17,3 +18,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
 
+def get_test_date(request):
+    if request.method == 'GET':
+        mess = list(Message.objects.values('subject', 'body'))
+    return JsonResponse({'data': mess})
