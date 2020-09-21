@@ -1,13 +1,14 @@
 import messageService from '../../services/messageService'
+import api from '@/services/api'
 
 const state = {
-  messages: []
+  messages: [],
 }
 
 const getters = {
   messages: state => {
     return state.messages
-  }
+  },
 }
 
 const actions = {
@@ -18,9 +19,13 @@ const actions = {
     })
   },
   addMessage({ commit }, message) {
-    messageService.postMessage(message)
-    .then(() => {
-      commit('addMessage', message)
+    return new Promise((resolve, reject) => {
+      api.post(`messages/`, message)
+      .then(response  => {
+        resolve(response);
+        console.log(response.data)
+        commit('addMessage', response.data)
+          })
     })
   },
   deleteMessage( { commit }, msgId) {
@@ -35,6 +40,7 @@ const mutations = {
   },
   addMessage(state, message) {
     state.messages.push(message)
+    console.log(state.messages)
   },
   deleteMessage(state, msgId) {
     state.messages = state.messages.filter(obj => obj.pk !== msgId)

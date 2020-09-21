@@ -1,10 +1,10 @@
 <template>
   <div class="hello">
-      <el-row :gutter="20">
+      <el-row :gutter="18">
         <el-col :span="4">
           <div class="Grid-cell">
             <el-input
-              placeholder="请输入内容"
+              placeholder="请输入ID"
               suffix-icon="el-icon-date"
               v-model="input1">
             </el-input>
@@ -13,7 +13,7 @@
         <el-col :span="4">
           <div class="Grid-cell">
             <el-input
-              placeholder="请输入内容"
+              placeholder="请输入项目"
               suffix-icon="el-icon-date"
               v-model="input2">
             </el-input>
@@ -37,29 +37,34 @@
             </el-input>
           </div>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="0.5">
           <div class="Grid-cell">
             <el-button type="primary">查询</el-button>
+          </div>
+        </el-col>
+        <el-col :span="0.5">
+          <div class="Grid-cell">
+            <el-button type="primary" :loading="false" @click="addMessage({ subject: input1, body: input2 })">新增</el-button>
           </div>
         </el-col>
       </el-row>
 
       <el-table
-        :data="tableData"
+        :data="messages"
         style="width: 100%"
         :row-class-name="tableRowClassName">
         <el-table-column
-          prop="subject"
+          prop="pk"
           label="ID"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="body"
+          prop="subject"
           label="项目"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="url"
+          prop="body"
           label="内容">
         </el-table-column>
       </el-table>
@@ -93,25 +98,27 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Vue from 'vue'
 
 
 
 export default{
   data() {
       return {
-        tableData: [],
         input1: "",
         input2: "",
         input3: "",
         input4: "",
         subject: "",
         msgBody: "",
+        pk: "",
       }
     },
-    computed: mapState({
-    messages: state => state.messages.messages
-  }),
+    computed: {
+      ...mapState({
+        messages: state => state.messages.messages
+        }),
+
+      },
     methods: {
     tableRowClassName({row, rowIndex}) {
         if (rowIndex === 1) {
@@ -126,17 +133,8 @@ export default{
     created() {
     this.$store.dispatch('messages/getMessages');
 
-
     },
-    mounted() {
-    for (var i in this.messages) {
-      //console.log("1111111111111")
-      console.log(this.messages)
-      //console.log(this.tableData)
-      }
-    this.tableData = this.messages
-    }
-  }
+}
 
 </script>
 
