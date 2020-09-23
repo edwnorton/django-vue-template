@@ -23,7 +23,6 @@ const actions = {
       api.post(`messages/`, message)
       .then(response  => {
         resolve(response);
-        console.log(response.data)
         commit('addMessage', response.data)
           })
     })
@@ -31,6 +30,12 @@ const actions = {
   deleteMessage( { commit }, msgId) {
     messageService.deleteMessage(msgId)
     commit('deleteMessage', msgId)
+  },
+  searchMessages( { commit }, item) {
+    messageService.queryMessages(item)
+    .then(messages => {
+      commit('setMessages', messages)
+    })
   }
 }
 
@@ -40,11 +45,13 @@ const mutations = {
   },
   addMessage(state, message) {
     state.messages.push(message)
-    console.log(state.messages)
   },
   deleteMessage(state, msgId) {
     state.messages = state.messages.filter(obj => obj.pk !== msgId)
-  }
+  },
+  setqueryMessages (state, messages) {
+    state.messages = messages
+  },
 }
 
 export default {

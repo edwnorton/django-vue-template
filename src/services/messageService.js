@@ -12,5 +12,9 @@ export default {
   deleteMessage(msgId) {
     return api.delete(`messages/${msgId}`)
               .then(response => response.data)
+  },
+  queryMessages(item) {
+    return api.get(`messages/?search=${item}`)
+              .then(response => response.data)
   }
 }
