@@ -31,6 +31,13 @@ const actions = {
     messageService.deleteMessage(msgId)
     commit('deleteMessage', msgId)
   },
+  muldelete( { commit }, msglist) {
+    for(var i = 0; i< msglist.length; i++){
+      let delitem = msglist[i].pk;
+      messageService.deleteMessage(delitem)
+      commit('setqueryMessages', delitem)
+      }
+  },
   searchMessages( { commit }, item) {
     messageService.queryMessages(item)
     .then(messages => {
@@ -49,8 +56,8 @@ const mutations = {
   deleteMessage(state, msgId) {
     state.messages = state.messages.filter(obj => obj.pk !== msgId)
   },
-  setqueryMessages (state, messages) {
-    state.messages = messages
+  setqueryMessages (state, delitem) {
+    state.messages = state.messages.filter(obj => obj.pk !== delitem)
   },
 }
 

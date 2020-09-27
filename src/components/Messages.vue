@@ -5,8 +5,9 @@
           <div class="Grid-cell">
             <el-input
               placeholder="请输入项目"
-              suffix-icon="el-icon-date"
-              v-model="input1">
+              prefix-icon="el-icon-search"
+              v-model="input1"
+              clearable>
             </el-input>
           </div>
         </el-col>
@@ -14,8 +15,9 @@
           <div class="Grid-cell">
             <el-input
               placeholder="请输入内容"
-              suffix-icon="el-icon-date"
-              v-model="input2">
+              prefix-icon="el-icon-search"
+              v-model="input2"
+              clearable>
             </el-input>
           </div>
         </el-col>
@@ -35,7 +37,8 @@
       <el-table
         :data="messages"
         style="width: 100%"
-        :row-class-name="tableRowClassName">
+        :row-class-name="tableRowClassName"
+        @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
           width="55">
@@ -54,27 +57,38 @@
           prop="body"
           label="内容">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" align="right">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="deleteMessage(scope.row.pk)">删除</el-button>
+            <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="text">编辑</el-button>-->
+            <el-button size="mini" slot="reference" type="text" @click="delsingle(scope.row.pk)">删除</el-button>
           </template>
         </el-table-column>
+
+        <el-table-column type="expand">
+         <template slot-scope="props">
+          <el-form label-position="right" inline class="demo-table-expand">
+            <el-form-item label="项目">
+              <span>{{ props.row.subject }}</span>
+            </el-form-item>
+            <el-form-item label="内容">
+              <span>{{ props.row.body }}</span>
+            </el-form-item>
+          </el-form>
+         </template>
+        </el-table-column>
+
       </el-table>
-
-
+  <div class="box">
+     <el-button size="small" type="danger" @click="open(multipleSelection)">删除</el-button>
+  </div>
 
   </div>
 </template>
 
+
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import ElementUI from 'element-ui';
 
 
 export default{
@@ -82,11 +96,8 @@ export default{
       return {
         input1: "",
         input2: "",
-        input3: "",
-        input4: "",
-        subject: "",
-        msgBody: "",
-        pk: "",
+        multipleSelection: [],
+        visible: false,
       }
     },
     computed: {
@@ -104,9 +115,52 @@ export default{
         }
         return '';
       },
-    ...mapActions('messages', ['addMessage','deleteMessage','searchMessages']),
+    ...mapActions('messages', ['addMessage','deleteMessage','searchMessages','muldelete']),
     indexMethod(index) {
       return index;
+    },
+
+    handleSelectionChange(val) {
+        this.multipleSelection = val;
+        console.log(this.multipleSelection)
+      },
+
+    open(item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('messages/muldelete', item)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+
+    delsingle(item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('messages/deleteMessage', item)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
     },
     created() {
@@ -126,4 +180,24 @@ export default{
   .el-table .success-row {
     background: #f0f9eb;
   }
+  .box{
+    display: flex;
+    margin-top: 20px;
+    justify-content:flex-end;
+  }
+
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+
 </style>
