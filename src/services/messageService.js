@@ -14,7 +14,7 @@ export default {
               .then(response => response.data)
   },
   queryMessages(item) {
-    return api.get(`messages/?search=${item}/`)
+    return api.get(`messages/?search=${item}`)
               .then(response => response.data)
   }
 }

@@ -17,7 +17,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('subject',)
+    search_fields = ('subject', 'body')
 
 
 def get_test_date(request):
