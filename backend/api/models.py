@@ -12,3 +12,16 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
         model = Message
         fields = ('url', 'subject', 'body', 'pk')
 
+
+class AlertGroup(models.Model):
+    group = models.CharField(max_length=50)
+    number = models.TextField()
+
+    class Meta:
+        db_table = 'AlertGroup'
+
+
+class AlertGroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AlertGroup
+        fields = ('url', 'group', 'number', 'pk')

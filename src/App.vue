@@ -26,7 +26,7 @@
                         <el-link href="#/messages">Django Rest</el-link>
                       </el-menu-item>
                       <el-menu-item index="1-3">
-                        <el-link href="#/1">test页面</el-link>
+                        <el-link href="#/1">告警设置</el-link>
                       </el-menu-item>
                     </el-menu-item-group>
                     <el-submenu index="1-4">
